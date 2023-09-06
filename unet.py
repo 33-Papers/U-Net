@@ -1,6 +1,4 @@
 import torch.nn as nn
-import torchvision.transforms.functional as tf
-from double_conv import DoubleConv
 from encoder import Encoder
 from decoder import Decoder
 

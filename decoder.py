@@ -27,6 +27,8 @@ class Decoder(nn.Module):
     def forward(self, x):
         out, residual_connections = x
 
+        residual_connections = residual_connections[::-1]
+
         out = self.dc(out)
 
         for i in range(0, len(self.up), 2):
