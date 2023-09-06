@@ -2,7 +2,6 @@ import torch
 import torch.nn as nn
 import torchvision.transforms.functional as tf
 from double_conv import DoubleConv
-from encoder import Encoder
 
 
 class Decoder(nn.Module):
@@ -32,13 +31,13 @@ class Decoder(nn.Module):
 
         for i in range(0, len(self.up), 2):
             out = self.up[i](out)
-            residual_connection = residual_connections[i//2]
+            residual_connection = residual_connections[i // 2]
 
             if out.shape != residual_connection:
                 out = tf.resize(out, size=residual_connection.shape[2:])
 
-            concat_residue = torch.cat((residual_connection, out), dim = 1)
+            concat_residue = torch.cat((residual_connection, out), dim=1)
 
-            out = self.up_tp[i+1](concat_residue)
+            out = self.up_tp[i + 1](concat_residue)
 
         return self.final_conv(out)
