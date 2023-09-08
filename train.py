@@ -100,7 +100,7 @@ def main():
         "state_dict": model.state_dict(),
         "optimizer": optimizer.state_dict(),
     }
-    save_checkpoint(checkpoint, filename="FILENAME")
+    save_checkpoint(checkpoint)
 
     if LOAD_MODEL:
         load_checkpoint(torch.load("my_checkpoint.pth"), model)
