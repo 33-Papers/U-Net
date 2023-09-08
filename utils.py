@@ -3,7 +3,7 @@ from dataset import SegmentationDataset
 from torch.utils.data import DataLoader
 
 
-def save_checkpoint(state, filename):
+def save_checkpoint(state, filename="my_checkpoint.pth"):
     print("=> Saving checkpoint")
     torch.save(state, filename)
 
