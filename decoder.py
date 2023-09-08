@@ -31,8 +31,8 @@ class Decoder(nn.Module):
 
         out = self.dc(out)
 
-        for i in range(0, len(self.up), 2):
-            out = self.up[i](out)
+        for i in range(0, len(self.up_tp), 2):
+            out = self.up_tp[i](out)
             residual_connection = residual_connections[i // 2]
 
             if out.shape != residual_connection:
