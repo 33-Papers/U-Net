@@ -8,7 +8,7 @@ from unet import UNET
 from utils import load_checkpoint, save_checkpoint, get_loaders
 
 from config import (LEARNING_RATE, DEVICE, BATCH_SIZE, NUM_WORKERS, NUM_EPOCHS, IMAGE_HEIGHT, IMAGE_WIDTH, PIN_MEMORY,
-                    LOAD_MODEL, TRAIN_IMG_DIR, TRAIN_MASK_DIR, VAL_IMG_DIR, VAL_MASK_DIR, FILENAME)
+                    LOAD_MODEL, TRAIN_IMG_DIR, TRAIN_MASK_DIR, VAL_IMG_DIR, VAL_MASK_DIR)
 
 
 def train(train_loader, val_loader, device, optimizer, model, criteria):
