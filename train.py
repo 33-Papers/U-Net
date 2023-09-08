@@ -4,7 +4,6 @@ import torch.nn as nn
 import torch.optim as optim
 from torchvision import transforms
 from unet import UNET
-import os
 
 from utils import load_checkpoint, save_checkpoint, get_loaders
 
