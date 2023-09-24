@@ -5,6 +5,7 @@ import torch.optim as optim
 from torchvision import transforms
 from unet import UNET
 
+from loss import loss_function, dice_metric
 from utils import load_checkpoint, save_checkpoint, get_loaders
 
 from config import (LEARNING_RATE, DEVICE, BATCH_SIZE, NUM_WORKERS, NUM_EPOCHS, IMAGE_HEIGHT, IMAGE_WIDTH, PIN_MEMORY,
@@ -13,12 +14,17 @@ from config import (LEARNING_RATE, DEVICE, BATCH_SIZE, NUM_WORKERS, NUM_EPOCHS, 
 
 def train(train_loader, val_loader, device, optimizer, model, criteria):
     train_losses, val_losses = [], []
+    train_metrics, val_metrics = [], []
     for e in tqdm(range(NUM_EPOCHS)):
         model.train()
+        train_step = 0
 
         running_train_loss, running_val_loss = 0, 0
+        running_train_metric, running_val_metric = 0, 0
 
         for i, data in enumerate(train_loader):
+            train_step += 1
+
             image_i, mask_i = data
             image = image_i.to(device)
             mask = mask_i.to(device)
@@ -32,12 +38,20 @@ def train(train_loader, val_loader, device, optimizer, model, criteria):
             train_loss.backward()
             optimizer.step()
 
-            running_train_loss += train_loss
-        train_losses.append(running_train_loss)
+            running_train_loss += train_loss.item()
+
+            train_metric = dice_metric(output.float(), mask.float())
+            running_train_metric += train_metric
+
+        train_losses.append(running_train_loss / train_step)
+        train_metrics.append(running_train_metric / train_step)
 
         model.eval()
+        test_step = 0
         with torch.no_grad():
             for i, data in enumerate(val_loader):
+                test_step += 1
+
                 image_i, mask_i = data
                 image = image_i.to(DEVICE)
                 mask = mask_i.to(DEVICE)
@@ -47,10 +61,14 @@ def train(train_loader, val_loader, device, optimizer, model, criteria):
                 val_loss = criteria(output.float(), mask.float())
                 running_val_loss += val_loss.item()
 
-            val_losses.append(running_val_loss)
+                val_metric = dice_metric(output.float(), mask.float())
+                running_val_metric += val_metric
 
-            print(f"Epoch : {e}, Train Loss : {running_train_loss}, Val Loss : {running_val_loss}")
+            val_losses.append(running_val_loss / test_step)
+            val_metrics.append(running_val_metric / test_step)
 
+            print(f"Epoch : {e}, Train Loss : {running_train_loss / train_step}, Val Loss : {running_val_loss / test_step}")
+            print(f"Epoch : {e}, Train Metric : {running_train_metric / train_step}, Val Metric : {running_val_metric / test_step}")
 
 def main():
     train_transform = transforms.Compose(
@@ -78,7 +96,7 @@ def main():
     )
 
     model = UNET().to(DEVICE)
-    criteria = nn.BCEWithLogitsLoss()
+    criteria = loss_function
     optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
 
     train_loader, val_loader = get_loaders(
