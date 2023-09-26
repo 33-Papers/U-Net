@@ -51,6 +51,9 @@ def testing(model, image_path, mask_path):
     plt.title("Model Output")
 
     plt.tight_layout()
+    
+    # Save the combined image as "prediction.jpg"
+    plt.savefig('prediction.jpg')
     plt.show()
 
 
