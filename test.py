@@ -1,5 +1,3 @@
-import argparse
-
 import torch
 import matplotlib.pyplot as plt
 from PIL import Image
@@ -7,18 +5,6 @@ import torchvision.transforms as transforms
 
 from utils import load_checkpoint
 from unet import UNET
-
-
-parser = argparse.ArgumentParser(description="Test UNET model on an image and mask.")
-parser.add_argument("--image_path", 
-                    default='./data/test/image/1.png',
-                    type=str, 
-                    help="path to the image")
-parser.add_argument("--mask_path", 
-                    default='./data/test/mask/1.png',
-                    type=str, 
-                    help="path to the mask")
-args = parser.parse_args()
 
 
 def testing(model, image_path, mask_path):
@@ -78,7 +64,7 @@ def main():
     load_checkpoint(checkpoint, model)
 
     # Test the model
-    testing(model, image_path=args.image_path, mask_path=args.mask_path)
+    testing(model, image_path='./data/test/image/1.png', mask_path='./data/test/mask/1.png')
 
 
 if __name__ == "__main__":
