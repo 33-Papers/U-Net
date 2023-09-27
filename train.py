@@ -67,8 +67,11 @@ def train(train_loader, val_loader, device, optimizer, model, criteria):
             val_losses.append(running_val_loss / test_step)
             val_metrics.append(running_val_metric / test_step)
 
-            print(f"Epoch : {e}, Train Loss : {running_train_loss / train_step}, Val Loss : {running_val_loss / test_step}")
-            print(f"Epoch : {e}, Train Metric : {running_train_metric / train_step}, Val Metric : {running_val_metric / test_step}")
+            print(f"\n\nEpoch : {e}")
+            print("-" * 20)
+            print(f"Train Loss : {running_train_loss / train_step}, Val Loss : {running_val_loss / test_step}")
+            print(f"Train Metric : {running_train_metric / train_step}, Val Metric : {running_val_metric / test_step}")
+
 
 def main():
     train_transform = transforms.Compose(
